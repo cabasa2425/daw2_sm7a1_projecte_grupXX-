@@ -21,6 +21,8 @@
     <h1>Admin page</h1>
     <a href="list_managers.php">List Manager</a>
     <a href="create_manager.php">Create Manager</a>
+    <a href="list_clients.php">List Clients</a>
+    <a href="create_client.php">Create Clients</a>
 </body>
 </html>
 
