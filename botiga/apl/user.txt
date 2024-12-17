@@ -1,3 +1,2 @@
-ladns:asd:client
-ladns:fesdfe:manager
-
+Carlos:12345678:admin:12345678@gamil.com
+erfgtyu:rftgyui:manager:rfgtyhu@gm:2:frghj:gtyhuj

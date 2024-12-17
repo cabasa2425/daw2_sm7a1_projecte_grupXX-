@@ -65,6 +65,7 @@ if ($file) {
         <input type="password" name="pwd" required>
         <br>
         <button type="submit">Login</button>
+        <a href="index.html">Home page</a>
     </form>
 
 

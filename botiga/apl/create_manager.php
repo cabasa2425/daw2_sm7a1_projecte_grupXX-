@@ -5,43 +5,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usr = $_POST['usr'] ?? '';
     $pwd = $_POST['pwd'] ?? '';
     $type = $_POST['type'] ?? '';
-    
-    if (empty($usr) || empty($pwd) || empty($type)) {
-        die("All fields are required.");
-    }
+    $email = $_POST['email'] ?? '';
+    $id = 0;
+    $username = $_POST['username'] ?? '';
+    $surname = $_POST['surname'] ?? '';
+
     
     $filename = "user.txt";
-    $data = "$usr:$pwd:$type\n";
-    $adminExists = false;
     
     if (file_exists($filename)) {
         $file = fopen($filename, "r");
-    
+        $l = 0;
         while (($line = fgets($file)) !== false) {
-            if (strpos($line, ":admin") !== false) {
-                $adminExists = true;
-                break;
-            }
+            $l += 1;
         }
         fclose($file);
+        $id = $l+1;
     } else {
         $file = fopen($filename, "w");
-    }
-    
-    if ($adminExists && $type === "admin") {
-        die("An admin already exists.");
     }
     
     $file = fopen($filename, "a");
     if (!$file) {
         die("Error opening or creating the file.");
     }
-    
+
+    $data = "$usr:$pwd:$type:$email:$id:$username:$surname\n";
     fwrite($file, $data);
     fclose($file);
     
     echo '<script type="text/javascript">alert("Registration successful. User data saved.");</script>';
-
+    header('location: admin.php');
 }
 ?>
 
@@ -61,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </header>
 
-    <form action="register.php" method="POST">
+    <form action="create_manager.php" method="POST">
 
         <label>Username:</label>
         <input type="text" name="usr" required>
@@ -71,12 +65,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <br>
         <label>What are you?</label>
         <br>
-
-        <input type="radio" name="type" value="client" required>  Client<br>
         <input type="radio" name="type" value="manager" required>  Manager<br>
-        <input type="radio" name="type" value="admin" required>  Administrator<br>
+        <br>
+        <label>Email:</label>
+        <input type="text" name="email" required>
+        <br>
+        <label>name:</label>
+        <input type="text" name="username" required>
+        <label>surname</label>
+        <input type="text" name="surname" required>
         <button type="submit">Register</button>
-        <a href="index.html">Home page</a>
     </form>
 
 </body>

@@ -1,18 +1,30 @@
+body {
+    background: linear-gradient(to bottom, #ddd, #6c5b7a);
+    font-family: Arial, sans-serif; 
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+
 header {
     background-color: rgb(230, 230, 230);
     height: 10vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
 }
 
 .header-left {
     display: flex;
     padding: 0 2vw;
     align-items: center;
-
 }
+
+img {
+    width: 9rem;
+}
+
 
 a {
     text-decoration: none;
@@ -27,9 +39,6 @@ a {
     margin-right: 3vw;
 }
 
-img {
-    width: 10vw;
-}
 button:hover {
     background-color: rgb(34, 98, 9); /* Fes que el botó es torni més fosc al passar el cursor */
 }
