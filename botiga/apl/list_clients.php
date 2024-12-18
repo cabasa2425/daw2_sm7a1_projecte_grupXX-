@@ -19,6 +19,7 @@
 </header>
 
 <a href="create_client.php">Create Client</a>
+<a href="clients_pdf.php" style="margin-left: 20px;">Download User List as PDF</a>
 
 <div>
 <?php
