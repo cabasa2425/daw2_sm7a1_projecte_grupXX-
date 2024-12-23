@@ -36,6 +36,14 @@ $usr = $_SESSION['usr'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_usr = $_POST['new_usr'];
+
+    if (strlen($_POST['new_pwd']) < 8) {
+        echo "<script>
+                document.body.innerHTML += `<div style='color: red; font-size: 14px; margin-top: 10px;'>La contraseña debe tener al menos 8 caracteres.</div>`;
+              </script>";
+        exit();
+    }
+    
     $new_pwd = $_POST['new_pwd'];
     $new_email = $_POST['new_email'];
 

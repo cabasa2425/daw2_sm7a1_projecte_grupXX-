@@ -56,7 +56,7 @@ if ($file) {
 
     </header>
 
-    <form action="login.php" method="POST">
+    <form class="form" action="login.php" method="POST">
 
         <label>Username:</label>
         <input type="text" name="usr" required>
@@ -64,7 +64,7 @@ if ($file) {
         <label>Password:</label>
         <input type="password" name="pwd" required>
         <br>
-        <button type="submit">Login</button>
+        <button class="login" type="submit">Login</button>
         <a href="index.html">Home page</a>
     </form>
 

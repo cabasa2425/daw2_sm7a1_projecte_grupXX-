@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </header>
 
-    <form action="register.php" method="POST">
+    <form class="form" action="register.php" method="POST">
 
         <label>Username:</label>
         <input type="text" name="usr" required>
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="radio" name="type" value="client" required>  Client<br>
         <input type="radio" name="type" value="manager" required>  Manager<br>
         <input type="radio" name="type" value="admin" required>  Administrator<br>
-        <button type="submit">Register</button>
+        <button class="login" type="submit">Register</button>
         <a href="index.html">Home page</a>
     </form>
 
