@@ -27,6 +27,10 @@ session_start();
                     <a href="auth.php?filter=registerClient">Create a client</a>
                     <a href="auth.php?filter=modifyAdmin">Modify admin information</a>
                 <?php endif; ?>
+                <?php if ($_SESSION['type'] === 'manager'): ?>
+                    <a href="manager.php?filter=list">Client list</a>
+                    <a href="manager.php?filter=report">Report</a>
+                <?php endif;?>
             <?php else: ?>
                 <a href="auth.php?filter=login">Login</a>
                 <a href="behavier.html">Behavier</a>

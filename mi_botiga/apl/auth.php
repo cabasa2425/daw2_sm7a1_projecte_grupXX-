@@ -7,7 +7,7 @@ if (isset($_GET['filter']) && $_GET['filter'] === 'logout') {
     logout();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] === 'POST') && ($_GET['filter'] !== 'modifyClient')) {
     $name = $_POST['name'] ?? "";
     $pwd = $_POST['pwd'];
     $id = 0;
@@ -18,13 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usr = $_POST['usr'] ?? "";
 
     $pdf = $_POST['pdf'] ?? "";
-    $delete = $_POST['delete'] ?? "";
+    $assign = $_POST['assign'] ?? "";
     $id = $_POST['id'] ?? '';
+
     
     $filter = $_POST['action'];
     
-    if ($delete === 'client') return deleteClient();
-    if ($delete === 'manager') return deleteManager();
+    if ($assign === 'modifyClient'){
+        modifyClient();
+    } 
+    elseif ($assign === 'deleteClient') deleteClient();
+    elseif ($assign === 'modifyManager') modifyManager();
+    elseif ($assign === 'deleteManager') deleteManager();
 
     if ($filter === 'login') {
         if (empty($usr) || empty($pwd)) {
@@ -34,15 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "Login successful";
                 header('location: index.php');
             } else {
+                $error = 'Login failed';
                 $mensaje = true;
             }
         }
     } elseif ($filter === 'registerManager') {
-
         if (empty($usr) || empty($pwd) || empty($email) || empty($name) || empty($surname)) {
             echo "All fields must be filled";
         }
-
         registerManager($usr, $pwd, 'manager', $email, $id, $name, $surname);
         header('location: auth.php?filter=registerManager');
 
@@ -55,10 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         registerClient($usr, $pwd, 'client', $email, $id, $name, $surname, $phone);
         header('location: auth.php?filter=registerClient');
     } elseif ($filter === 'modifyAdmin') {
-        updateAdminInformation();
+        if (strlen($pwd) < 8) {
+            $error = "Password must be at least 8 characters";
+            $mensaje = true;
+        } else {
+            updateAdminInformation();
+        }
+
     }
     else {
-        echo "Invalid action.";
+        echo "error:";
     }
 }
 
@@ -116,7 +126,7 @@ if ($pdf === "client") {
             <input type="password" name="pwd">
             <button type="submit" name="action" value="login">Login</button>
         </form>
-        <?php if ($mensaje): ?> <h2>Wrong Credentials</h2> <?php endif; ?>
+        <?php if ($mensaje): echo "<h1>$error</h1>"?>  <?php endif; ?>
 
         <?php else: ?>
     <?php if (checkAdmin()): ?>
@@ -157,7 +167,8 @@ if ($pdf === "client") {
             <label>Password:</label>
             <input type="password" name="pwd">
             <br>
-            <label>Email:</label>
+            <label>Email:</label>$modify = $_POST['modify'] ?? "";
+
             <input type="text" name="email">
             <br>
             <label>Name:</label>
@@ -174,7 +185,7 @@ if ($pdf === "client") {
 
         <?php elseif ($filter === "modifyAdmin"): ?>
             <h2>Modify Admin Information</h2>
-            <form action="auth.php" method="POST">
+            <form action="auth.php?filter=modifyAdmin" method="POST">
                 <label>Username:</label>
                 <input type="text" name="usr">
                 <label>Password:</label>
@@ -183,9 +194,59 @@ if ($pdf === "client") {
                 <input type="text" name="email">
                 <button type="submit" name="action" value="modifyAdmin">Modify</button>
             </form>
-            
+            <?php if ($mensaje): echo "<h1>$error</h1>"?>  <?php endif; ?>
         <?php endif;?>
-    <?php endif; ?>
+
+
 <?php endif;?>
+<?php endif;?> 
+
+<?php if ($filter === "modifyClient"): ?> 
+    <h2>Modify Client Information</h2>
+    <div class="class">
+        <form action="auth.php?filter=registerClient" method="POST">
+            <input type="hidden" name="id" value="<?php echo $_POST['id']; ?>">
+
+            <label>Username:</label>
+            <input type="text" name="usr" value="<?php echo htmlspecialchars($usr); ?>" required>
+
+            <label>Email:</label>
+            <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+
+            <label>Name:</label>
+            <input type="text" name="name" value="<?php echo htmlspecialchars($name); ?>" required>
+
+            <label>Surname:</label>
+            <input type="text" name="surname" value="<?php echo htmlspecialchars($surname); ?>" required>
+
+            <label>Phone:</label>
+            <input type="text" name="phone" value="<?php echo htmlspecialchars($phone); ?>" required>
+
+            <button type="submit" name="assign" value="modifyClient">Update</button>
+        </form>
+    </div>
+
+    <?php elseif ($filter === "modifyManager"): ?>
+        <h2>Modify Manager Information</h2>
+        <div class="class">
+       <form action="auth.php?filter=registerManager" method="POST">
+       <input type="hidden" name="id" value="<?php echo $_POST['id']; ?>">
+
+            <label>Username:</label>
+            <input type="text" name="usr" value="<?php echo htmlspecialchars($usr); ?>" required>
+
+            <label>Email:</label>
+            <input type="text" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+
+            <label>Name:</label>
+            <input type="text" name="name" value="<?php echo htmlspecialchars($name); ?>" required>
+
+            <label>Surname:</label>
+            <input type="text" name="surname" value="<?php echo htmlspecialchars($surname); ?>" required>
+
+            <button type="submit" name="assign" value="modifyManager">Update</button>
+        </form>
+    </div>
+<?php endif; ?>
 </body>
 </html>

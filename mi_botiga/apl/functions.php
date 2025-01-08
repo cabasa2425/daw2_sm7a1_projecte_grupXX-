@@ -18,16 +18,20 @@ function login($name, $password){
     $lines = readLines('users.txt');
     foreach ($lines as $line){
         $parts = explode(":", $line);
-        if ($parts[0] === $name && $parts[1] === $password){
-            session_start();
-            $_SESSION['usr'] = $name;
-            $_SESSION['type'] = $parts[2];
-            return true;
-        } else {
-            return false;
+            if ($parts[0] === $name){
+
+            if (password_verify($password, $parts[1])){
+                session_start();
+                $_SESSION['usr'] = $name;
+                $_SESSION['type'] = $parts[2]; 
+                return true; 
+            } else {
+                return false;
+            }
         }
     }
 }
+
 
 function registerManager($usr,$pwd,$type,$email,$id,$name,$surname) {
 
@@ -40,9 +44,10 @@ function registerManager($usr,$pwd,$type,$email,$id,$name,$surname) {
             $id += 1;
         }
         $id += 1;
+        $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
 
         $file = fopen($filename, 'a');
-        $data = "$usr:$pwd:$type:$email:$id:$name:$surname\n";
+        $data = "$usr:$hashedPwd:$type:$email:$id:$name:$surname\n";
         fwrite($file, $data);
         fclose($file); 
     } else {
@@ -61,9 +66,10 @@ function registerClient($usr,$pwd,$type,$email,$id,$name,$surname,$phone){
         foreach ($lines as $line){
             $id += 1;
         }
+        $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
 
         $file = fopen($filename, 'a');
-        $data = "$usr:$pwd:$type:$email:$id:$name:$surname:$phone\n";
+        $data = "$usr:$hashedPwd:$type:$email:$id:$name:$surname:$phone\n";
         fwrite($file, $data);
         fclose($file);    
     } else {
@@ -92,9 +98,12 @@ function showManagers(){
                     echo "<p><strong>Apellido:</strong> $parts[6]</p>";
                     echo "<p><strong>Email:</strong> $parts[3]</p>";
                     echo "<p><strong>ID:</strong> $parts[4]</p>";
-                    echo "<form action='auth.php' name='filter' value='registerManager' method='POST'>
+                    echo "<form action='auth.php?filter=registerManager' method='POST'>
                     <input type='hidden' name='id' value='$parts[4]'>
-                    <button  name='delete' value='manager'> delete </button></form>";
+                    <button  name='assign' value='deleteManager'> delete </button></form>";
+                    echo "<form action='auth.php?filter=modifyManager' method='POST'>
+                    <input type='hidden' name='id' value='$parts[4]'>
+                    <button  name='assign' value='modify_manager'> Modify </button></form>";
                     echo "</div>";
                 }
             }
@@ -115,14 +124,66 @@ function showManagers(){
                 echo "<p><strong>Apellido:</strong> $parts[6]</p>";
                 echo "<p><strong>Email:</strong> $parts[3]</p>";
                 echo "<p><strong>ID:</strong> $parts[4]</p>";
-                echo "<form action='auth.php' name='filter' value='registerManager' method='POST'>
+                echo "<form action='auth.php?filter= "  ."registerClient' method='POST'>
                 <input type='hidden' name='id' value='$parts[4]'>
-                <button  name='delete' value='manager'> delete </button></form>";
+                <button  name='assign' value='deleteClient'> delete </button></form>";
+                echo "<form action='auth.php?filter=modifyClient' method='POST'>
+                <input type='hidden' name='id' value='$parts[4]'>
+                <button  name='assign' value='modify_client'> Modify </button></form>";
                 echo "</div>";
             }
 
         }    
 }
+
+function modifyManager(){
+    $usr = $_POST['usr'];
+    $email = $_POST['email'];
+    $name = $_POST['name'];
+    $surname = $_POST['surname'];
+
+    $id = $_POST['id'];
+    $lines = readLines('users.txt');
+    $newLines = [];
+    foreach ($lines as $line){
+        $parts = explode(':', trim($line));
+        if ($parts[4]!== $id) {
+            $newLines[] = $line;
+        } else {
+            $newLines[] = "$usr:$parts[1]:$parts[2]:$email:$parts[4]:$name:$surname";
+        }
+    }
+    $file = fopen('users.txt', 'w');
+    fwrite($file, implode(PHP_EOL, $newLines));
+    array_pop($lines);
+}
+
+function modifyClient(){
+    $usr = $_POST['usr'];
+    $email = $_POST['email'];
+    $name = $_POST['name'];
+    $surname = $_POST['surname'];
+    $phone = $_POST['phone'];
+
+
+    $id = $_POST['id'];
+    $lines = readLines('users.txt');
+    $newLines = [];
+    foreach ($lines as $line){
+        $parts = explode(':', trim($line));
+        if ($parts[4]!== $id) {
+            $newLines[] = $line;
+        } else {
+            $newLines[] = "$usr:$parts[1]:$parts[2]:$email:$parts[4]:$name:$surname:$phone";
+        }
+    }
+    $file = fopen('users.txt', 'w');
+    fwrite($file, implode(PHP_EOL, $newLines));
+    array_pop($lines);
+}
+
+
+
 
 function deleteManager(){
     $id = $_POST['id'];
@@ -162,11 +223,13 @@ function updateAdminInformation() {
     $pwd = $_POST['pwd'];
     $email = $_POST['email'];
 
+    $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
+
     $lines = readLines('users.txt');
     foreach ($lines as $i => $line) {
         $parts = explode(':', trim($line));
         if ($parts[2] === 'admin') {
-            $lines[$i] = "$usr:$pwd:$parts[2]:$email";
+            $lines[$i] = "$usr:$hashedPwd:$parts[2]:$email";
             break;
         }
     }

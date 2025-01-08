@@ -1,2 +1,4 @@
-carlos:123:admin:12345678@gmail.com
-l:l:client:l:3:l:l:l
+carlos:$2y$10$OoNQLRxpkvbhHd9LkRyOeOKm4QF5Qs4eHv2iNnAX3pB6UqrpBpbqq:admin:cu@gmail.com
+w:i:manager:w:5:w:w
+o:$2y$10$7SFGzMjQlH2vRTGUkfha3uLZJ.PY74S1CpiuI5Fwk/fBMipWGL.si:manager:o:5:o:o
+p:$2y$10$nLuMOysT7s8WEc4jj0oFbeSgfhgE4ouDx2rgY13Hubqa.J95gXam2:manager:p:6:p:p
