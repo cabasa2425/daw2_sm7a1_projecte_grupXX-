@@ -30,6 +30,8 @@ session_start();
                 <?php if ($_SESSION['type'] === 'manager'): ?>
                     <a href="manager.php?filter=list">Client list</a>
                     <a href="manager.php?filter=reportClient">Report</a>
+                    <a href="manager.php?filter=registerProduct">Register product</a>
+                    <a href="manager.php?filter=listProduct">List products</a>
                 <?php endif;?>
             <?php else: ?>
                 <a href="auth.php?filter=login">Login</a>

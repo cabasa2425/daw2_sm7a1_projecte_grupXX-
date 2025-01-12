@@ -3,10 +3,15 @@
 function readLines($filename){
     if (file_exists($filename)){
         $size = filesize($filename);
-        $file = fopen($filename, 'r');
-        $lines = explode(PHP_EOL, fread($file, $size));
-        fclose($file);
-        return $lines;
+
+        if ($size > 0){
+            $file = fopen($filename, 'r');
+            $lines = explode(PHP_EOL, fread($file, $size));
+            fclose($file);
+            return $lines;
+        } else {
+            return [];
+        }
     } else {
         echo "<script> body.innerHTML = 'File not found'</script>";
         return;
@@ -336,5 +341,169 @@ function updateManagerInformations() {
     fclose($file);
 }
 
+// SECTION 3 ----------------------------------------
+
+
+require('../vendor/autoload.php');
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+function sendEmail($user_id, $request, $report){
+
+
+
+
+    $user_id = $_POST['id'];
+    $request = $_POST['request'];
+    $report = $_POST['report'];
+
+    if ($request === 'add'){
+        $user_id = $user_id ?: 'Add new one';
+    }
+    // Configuración del correo
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->CharSet = 'UTF-8';
+        $mail->SMTPDebug = SMTP::DEBUG_OFF; // Cambiar a DEBUG_OFF para producción
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 587;
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+        // Credenciales del correo
+        $mail->Username = 'tenedote999@gmail.com';  // Cambia por tu correo de Gmail
+        $mail->Password = 'erjx bpdw njvr nodq';    // Cambia por tu contraseña de aplicación
+
+        // Configuración del destinatario y mensaje
+        $mail->setFrom('tenedote999@gmail.com', 'Carlos');
+        $mail->addAddress('tenedote999@gmail.com', 'Carlos');  // Cambia por el correo del destinatario
+
+        $mail->Subject = "Reporte de Cliente - Solicitud: " . ucfirst($request);  // Asunto del correo
+        $mail->isHTML(true);
+        $mail->Body = "<h1>Nuevo Reporte</h1>
+                       <p><strong>ID del Usuario:</strong> {$user_id}</p>
+                       <p><strong>Solicitud:</strong> {$request}</p>
+                       <p><strong>Reporte:</strong><br>{$report}</p>";
+
+        // Enviar correo
+        if ($mail->send()) {
+            echo 'El correo se ha enviado correctamente.';
+            header('location: index.php');
+        } else {
+            echo 'No se pudo enviar el correo. Inténtalo nuevamente.';
+        }
+    } catch (Exception $e) {
+        echo "Error al enviar el mensaje: {$mail->ErrorInfo}";
+    }
+}
+
+function registerProduct($name, $id, $price, $iva, $available){
+    
+    $filename = '../products.txt';
+    if (file_exists($filename)){
+
+        $lines = readLines($filename);
+        $id = 0;
+        foreach ($lines as $line){
+            $id += 1;
+        }
+
+        $file = fopen($filename, 'a');
+        $data = "$name:$id:$price:$iva:$available\n";
+        fwrite($file, $data);
+        fclose($file);    
+    } else {
+        echo "File not found";
+        return;
+    }
+}
+
+function showProducts(){
+    $filename = '../products.txt';
+
+    if (file_exists($filename)){
+
+        $lines = readLines($filename);
+        foreach ($lines as $line){
+            if (!empty($line)) {
+            $parts = explode(':', $line);
+            echo "<p>ID: {$parts[1]}, Nombre: {$parts[0]}, Precio: {$parts[2]}, IVA: {$parts[3]}, Disponible: {$parts[4]}</p>";
+            echo "<form action='manager.php?filter=deleteProduct' method='POST'>
+                    <input type='hidden' name='id' value='$parts[1]'>
+                    <button  name='assign' value='deleteProduct'> Delete </button></form>";
+
+            echo "<form action='manager.php?filter=modifyProduct' method='POST'>
+                    <input type='hidden' name='id' value='$parts[1]'>
+                    <button  name='assign' value='modifyProduct'> Modify </button></form>";
+            }
+        }
+    }
+}
+
+function modifyProduct($name, $id, $price, $iva, $available){
+    $filename = '../products.txt';
+
+    if (file_exists($filename)){
+
+        $lines = readLines($filename);
+        foreach ($lines as $i => $line){
+            $parts = explode(':', $line);
+            if ($parts[1] === $id){
+                $lines[$i] = "$name:$id:$price:$iva:$available";
+                break;
+            }
+        }
+        $file = fopen($filename, 'w');
+        fwrite($file, implode("\n", $lines));
+        fclose($file);    
+        header('location: manager.php?filter=listProduct');
+    } else {
+        echo "File not found";
+        return;
+    }
+}
+
+function deleteProduct($id){
+
+    $filename = '../products.txt';
+    if (file_exists($filename)){
+        $lines = readLines($filename);
+        $newLines = [];
+        foreach ($lines as $line){
+            $parts = explode(':', $line);
+            if ($parts[1]!== $id) {
+                $newLines[] = $line;
+            }
+        }
+        $file = fopen($filename, 'w');
+        fwrite($file, implode("\n", $newLines));
+        header('location: manager.php?filter=listProduct');
+    } else {
+        echo "File not found";
+        return;
+    }
+}
+
+function productToPDF(){
+        require_once('../vendor/autoload.php');
+        $dompdf = new Dompdf\Dompdf();
+        $lines = readLines('../products.txt');
+        $html = "<h1>List of products</h1>   <table border='1' style='width:100%; border-collapse: collapse;'>
+        <tr><th>NAME</th><th>ID</th><th>PRICE</th><th>IVA</th><th>AVAILABILITY</tr>";
+        foreach ($lines as $line) {
+            $parts = explode(':', trim($line));
+            $html.= "<tr><td>$parts[0]</td><td>$parts[1]</td><td>$parts[2]</td><td>$parts[3]</td><td>$parts[4]</td></tr>";
+        }
+            $html .= "</table>";
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+            $dompdf->stream("Products_list.pdf");
+    
+}
 
 ?>

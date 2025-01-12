@@ -1,69 +1,55 @@
 <?php
 
 require('functions.php');
-require('../vendor/autoload.php');
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
 
 session_start();
+
+if (!isset($_SESSION['usr']) || $_SESSION['type']!== 'manager'){
+        header('Location: index.php');
+    }
 
 if (isset($_GET['filter']) && $_GET['filter'] === 'logout') {
     logout();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'reportClient') {
-    // Validar campos obligatorios
-    if (empty($_POST['request']) || empty($_POST['report'])) {
-        echo "Error: Todos los campos son obligatorios.";
-        exit;
-    }
-    $user_id = $_POST['id'];
-    $request = $_POST['request'];
-    $report = $_POST['report'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-    if ($request === 'add'){
-        $user_id = $user_id ?: 'Add new one';
-    }
-    // Configuración del correo
-    $mail = new PHPMailer(true);
-
-    try {
-        $mail->CharSet = 'UTF-8';
-        $mail->SMTPDebug = SMTP::DEBUG_OFF; // Cambiar a DEBUG_OFF para producción
-        $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
-        $mail->Port = 587;
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-
-        // Credenciales del correo
-        $mail->Username = 'tenedote999@gmail.com';  // Cambia por tu correo de Gmail
-        $mail->Password = 'erjx bpdw njvr nodq';    // Cambia por tu contraseña de aplicación
-
-        // Configuración del destinatario y mensaje
-        $mail->setFrom('tenedote999@gmail.com', 'Carlos');
-        $mail->addAddress('tenedote999@gmail.com', 'Carlos');  // Cambia por el correo del destinatario
-
-        $mail->Subject = "Reporte de Cliente - Solicitud: " . ucfirst($request);  // Asunto del correo
-        $mail->isHTML(true);
-        $mail->Body = "<h1>Nuevo Reporte</h1>
-                       <p><strong>ID del Usuario:</strong> {$user_id}</p>
-                       <p><strong>Solicitud:</strong> {$request}</p>
-                       <p><strong>Reporte:</strong><br>{$report}</p>";
-
-        // Enviar correo
-        if ($mail->send()) {
-            echo 'El correo se ha enviado correctamente.';
-        } else {
-            echo 'No se pudo enviar el correo. Inténtalo nuevamente.';
+    if (isset($_POST['action']) && $_POST['action'] === 'reportClient'){
+        if (empty($_POST['request']) || empty($_POST['report'])) {
+            echo "Error: Todos los campos son obligatorios.";
+            exit;
         }
-    } catch (Exception $e) {
-        echo "Error al enviar el mensaje: {$mail->ErrorInfo}";
+        $user_id = $_POST['id'];
+        $request = $_POST['request'];
+        $report = $_POST['report'];
+    
+        if ($request === 'add'){
+            $user_id = $user_id ?: 'Add new one';
+        }
+        sendEmail($user_id, $request, $report);
     }
-}
+    else if ($_POST['action'] === 'registerProduct'){
+        $name = $_POST['name'];
+        $price = $_POST['price'];
+        $iva = $_POST['iva'];
+        $available = $_POST['available'];
+    
+        registerProduct($name, null, $price, $iva, $available); 
+        echo "Producto añadido correctamente.";
+    } else if ($_POST['action'] === 'modifyProduct'){
 
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $price = $_POST['price'];
+        $iva = $_POST['iva'];
+        $available = $_POST['available'];
+
+        modifyProduct($name, $id, $price, $iva, $available);
+
+} else if ($_POST['action'] === 'productPDF'){
+    productToPDF();
+}
+}
 ?>
 
 <!DOCTYPE html>
@@ -106,6 +92,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <button type="submit">Enviar Correo</button>
     </form>
 
+<?php elseif (isset($_GET['filter']) && $_GET['filter'] === 'registerProduct'): ?>
+
+    <h1>Add Product</h1>
+    <form action="manager.php" method="POST">
+    <input type="hidden" name="action" value="registerProduct">
+    <label for="name">Nombre:</label>
+    <input type="text" id="name" name="name"><br>
+    
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price"><br>
+
+    <label for="iva">iva:</label>
+    <input type="number" name="iva"><br>
+
+    <label for="available">availability:</label>
+    <input type="text" name="available"><br>
+
+    <button type="submit">Add Product</button>
+    </form>
+
+
+
+<?php elseif (isset($_GET['filter']) && $_GET['filter'] ==='listProduct'): ?>
+
+<form action="manager.php" method="POST">
+<button type="submit" name="action" value="productPDF">Export to pdf</button>
+</form>
+<?php showProducts(); ?>
+
+
+<?php elseif (isset($_GET['filter']) && $_GET['filter'] ==='modifyProduct'): ?>
+
+    <h1>Modify Product</h1>
+    <form action="manager.php" method="POST">
+    <input type="hidden" name="id" value="<?php echo $_POST['id']; ?>" >
+    <label for="name">Nombre:</label>
+    <input type="text" id="name" name="name"><br>
+    
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price"><br>
+
+    <label for="iva">iva:</label>
+    <input type="number" name="iva"><br>
+
+    <label for="available">availability:</label>
+    <input type="text" name="available"><br>
+
+    <button type="submit" name="action" value="modifyProduct">Modify Product</button>
+    </form>
+
+<?php elseif (isset($_GET['filter']) && $_GET['filter'] === 'deleteProduct'):?>
+
+    <?php deleteProduct($_POST['id']) ?>
 <?php endif; ?>
 
 </body>
