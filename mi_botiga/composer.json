@@ -1,0 +1,18 @@
+{
+    "name": "ramiro/mi_botiga",
+    "autoload": {
+        "psr-4": {
+            "Ramiro\\MiBotiga\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Carlos",
+            "email": "carlosbarretosantana@gmail.com"
+        }
+    ],
+    "require": {
+        "phpmailer/phpmailer": "^6.9",
+        "dompdf/dompdf": "^3.0"
+    }
+}

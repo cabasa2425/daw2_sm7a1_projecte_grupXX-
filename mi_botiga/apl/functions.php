@@ -136,6 +136,29 @@ function showManagers(){
         }    
 }
 
+function showClientsToManager(){
+    
+    $lines = readLines('users.txt');
+    foreach ($lines as $line){
+
+        $parts = explode(':', trim($line));
+
+        if ($parts[2] === "client") {
+            
+            echo "<div class='list'>";
+            echo "<h3><strong>Nombre:</strong> $parts[0]</h3>";
+            echo "<p><strong>Usuario:</strong> $parts[5]</p>";
+            echo "<p><strong>Apellido:</strong> $parts[6]</p>";
+            echo "<p><strong>Email:</strong> $parts[3]</p>";
+            echo "<p><strong>ID:</strong> $parts[4]</p>";
+            echo "<form action='manager.php?filter="  ."reportClient' method='POST'>
+            <input type='hidden' name='id' value='$parts[4]'>
+            <button  name='report' value='reportClient'> Report </button></form>";
+        }
+
+    }    
+}
+
 function modifyManager(){
     $usr = $_POST['usr'];
     $email = $_POST['email'];

@@ -29,7 +29,7 @@ session_start();
                 <?php endif; ?>
                 <?php if ($_SESSION['type'] === 'manager'): ?>
                     <a href="manager.php?filter=list">Client list</a>
-                    <a href="manager.php?filter=report">Report</a>
+                    <a href="manager.php?filter=reportClient">Report</a>
                 <?php endif;?>
             <?php else: ?>
                 <a href="auth.php?filter=login">Login</a>
