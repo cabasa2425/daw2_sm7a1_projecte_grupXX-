@@ -1,6 +1,0 @@
-Carlos:12345678:admin:12345678@gamil.com
-erfgtyu:rftgyui:manager:rfgtyhu@gm:2:frghj:gtyhuj
-julius:123456:manager:rftgh@jn:3:ghb:yhj
-ertyu:tyuikol:manager:ertyu@j:4:fghj:gthj
-3456:745678:manager:456789@j:5:wfejy:rtghnwfe
-123:123:client

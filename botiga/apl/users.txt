@@ -1,0 +1,7 @@
+carlos:$2y$10$OoNQLRxpkvbhHd9LkRyOeOKm4QF5Qs4eHv2iNnAX3pB6UqrpBpbqq:admin:cu@gmail.com
+w:i:manager:w:5:w:w
+o:$2y$10$7SFGzMjQlH2vRTGUkfha3uLZJ.PY74S1CpiuI5Fwk/fBMipWGL.si:manager:o:5:o:o
+p:$2y$10$nLuMOysT7s8WEc4jj0oFbeSgfhgE4ouDx2rgY13Hubqa.J95gXam2:manager:p:6:p:p
+Willy:$2y$10$Anl8X0tADcIMBHmmjIU.Del2SpLn8m/JuzV9LsVAoS1mh6HLJwpru:client:nose:1:nose:nose:nose
+willy:$2y$10$Brswlb0ZI.cinNnzBAa00.m62VheNrB32denXoWl7omB8bQacKROa:client:tyyr:1:ry:ry:ryr
+HOLA:$2y$10$cKvJXoLld0mCVEpWQL61xuvbJimPyfgJTFzI0V0.6MPTQ4Xs4BWa2:client:weqwe:1:weqweq:eqwwe:eqe
