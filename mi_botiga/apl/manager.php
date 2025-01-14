@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <form action="manager.php" method="POST">
 <button type="submit" name="action" value="productPDF">Export to pdf</button>
 </form>
-<?php showProducts(); ?>
+<?php showProductsToManager(); ?>
 
 
 <?php elseif (isset($_GET['filter']) && $_GET['filter'] ==='modifyProduct'): ?>

@@ -2,6 +2,11 @@
 
 session_start();
 
+if (!isset($_SESSION['id'])) {
+    echo "Error: No se ha configurado el ID del cliente en la sesión.";
+} else {
+    echo "ID del cliente en la sesión: " . $_SESSION['id'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -51,6 +56,16 @@ session_start();
             <h2>Welcome to Wilos Balvan!</h2>
             <p>An application to manage users and permissions efficiently.</p>
         </section>
+
+        <?php if ($_SESSION['type'] === 'client'): ?>
+        <form method="post" action="client.php?filter=showProduct">
+            <input type="hidden" name="id" value="<?php echo $_SESSION['id']; ?>">
+            <button type="submit">Show Product</button>
+        </form>
+
+        <a href="client.php?filter=viewCart">View Cart</a>
+
+        <?php endif; ?>
     </main>
 
 

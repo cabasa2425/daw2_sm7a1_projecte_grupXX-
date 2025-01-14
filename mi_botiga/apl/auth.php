@@ -37,6 +37,7 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && ($_GET['filter'] !== 'modifyClien
         } else {
             if (login($usr, $pwd)) {
                 echo "Login successful";
+                echo "<input type='hidden' name='id' value='$id' />";
                 header('location: index.php');
             } else {
                 $error = 'Login failed';
