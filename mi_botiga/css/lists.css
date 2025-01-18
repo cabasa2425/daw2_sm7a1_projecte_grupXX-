@@ -1,0 +1,42 @@
+h2 {
+    text-align: center;
+}
+.class {
+    text-align: center;
+}
+form {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.lists {
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+padding: 20px;
+background-color: #f9f9f9;
+}
+
+.list {
+flex: 1 1 calc(33.33% - 20px);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+padding: 15px;
+border-radius: 8px;
+background-color: #ffffff;
+border: 1px solid #ddd;
+}
+
+.list p {
+margin: 5px 0;
+font-size: 14px;
+color: #333;
+}
+
+.list strong {
+color: #555;
+}
+.list a {
+text-decoration: none;
+}

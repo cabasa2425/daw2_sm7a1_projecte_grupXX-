@@ -1,0 +1,26 @@
+body {
+    background: linear-gradient(to bottom, #ddd, #6c5b7a);
+    font-family: Arial, sans-serif; 
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+
+header {
+    background-color: rgb(230, 230, 230);
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    padding: 0 2vw;
+    align-items: center;
+}
+
+img {
+    width: 9rem;
+}

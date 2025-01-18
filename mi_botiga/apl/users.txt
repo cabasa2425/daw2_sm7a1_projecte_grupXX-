@@ -1,0 +1,8 @@
+carlos:$2y$10$OoNQLRxpkvbhHd9LkRyOeOKm4QF5Qs4eHv2iNnAX3pB6UqrpBpbqq:admin:tenedote999@gmail.com
+w:i:manager:w:5:w:w
+o:$2y$10$7SFGzMjQlH2vRTGUkfha3uLZJ.PY74S1CpiuI5Fwk/fBMipWGL.si:manager:o:5:o:o
+p:$2y$10$nLuMOysT7s8WEc4jj0oFbeSgfhgE4ouDx2rgY13Hubqa.J95gXam2:manager:p:6:p:p
+kk:$2y$10$Bwn1FDzj1eR4Zs4NhOx1beFI8eF9X8/j5NLE1FGzrV5jWfa8vl5/2:client:kk:5:kk:kk:99
+m:$2y$10$GcQup0D8qI5kkog9WEzze.OI6TZleJEAx2wgRuX5JJIUQhJQNdtiO:client:m:6:m:m:m
+antonio:$2y$10$VcnmnKc7ihBwN14lpdTqguLpUhnaFw0Hxv0gl/arcLCm.oDoLo8j.:manager:antonio@antonios@gmail.com:8:antonio:antonio
+antonio:$2y$10$t4Sn9mjXYqTFFpAqC6v1iuTKnZLulz..Ja/LI.qY3zVsNGlqjjDBC:manager:antonio@antonios@gmail.com:9:ant:onio
