@@ -98,12 +98,12 @@ if ($pdf === "client") {
         </div>
          <div class="header-right">
             <?php if (isset($_SESSION['usr'])): ?>
-                <a href="auth.php?filter=logout">Logout</a>
-                <a href="auth.php?filter=registerManager">Create a manager</a>
-                <a href="auth.php?filter=registerClient">Create a client</a>
+                <a class="link" href="auth.php?filter=logout">Logout</a>
+                <a class="link" href="auth.php?filter=registerManager">Create a manager</a>
+                <a class="link" href="auth.php?filter=registerClient">Create a client</a>
             <?php else: ?>
-                <a href="auth.php?filter=login">Login</a>
-                <a href="behavier.html">Behavier</a>
+                <a class="link" href="auth.php?filter=login">Login</a>
+                <a class="link" href="behaviour.html">Behaviour</a>
             <?php endif; ?>
         </div>
 

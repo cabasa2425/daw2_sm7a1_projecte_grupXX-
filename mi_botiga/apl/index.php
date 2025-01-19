@@ -1,4 +1,5 @@
 <?php
+require('functions.php');
 
 session_start();
 
@@ -7,6 +8,8 @@ if (!isset($_SESSION['id'])) {
 } else {
     echo "ID del cliente en la sesión: " . $_SESSION['id'];
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -26,21 +29,22 @@ if (!isset($_SESSION['id'])) {
         </div>
          <div class="header-right">
             <?php if (isset($_SESSION['usr'])): ?>
-                <a href="auth.php?filter=logout">Logout</a>
+                <a class="link" href="auth.php?filter=logout">Logout</a>
                 <?php if ($_SESSION['type'] === 'admin'): ?>
-                    <a href="auth.php?filter=registerManager">Create a manager</a>
-                    <a href="auth.php?filter=registerClient">Create a client</a>
-                    <a href="auth.php?filter=modifyAdmin">Modify admin information</a>
+                    <a class="link" href="auth.php?filter=registerManager">Create a manager</a>
+                    <a class="link" href="auth.php?filter=registerClient">Create a client</a>
+                    <a class="link" href="auth.php?filter=modifyAdmin">Modify admin information</a>
                 <?php endif; ?>
                 <?php if ($_SESSION['type'] === 'manager'): ?>
-                    <a href="manager.php?filter=list">Client list</a>
-                    <a href="manager.php?filter=reportClient">Report</a>
-                    <a href="manager.php?filter=registerProduct">Register product</a>
-                    <a href="manager.php?filter=listProduct">List products</a>
+                    <a class="link" href="manager.php?filter=list">Client list</a>
+                    <a class="link" href="manager.php?filter=reportClient">Report</a>
+                    <a class="link" href="manager.php?filter=registerProduct">Register product</a>
+                    <a class="link" href="manager.php?filter=listProduct">List products</a>
+                    <a class="link" href="manager.php?filter=viewCommand">View Commands</a>
                 <?php endif;?>
             <?php else: ?>
-                <a href="auth.php?filter=login">Login</a>
-                <a href="behavier.html">Behavier</a>
+                <a class="link" href="auth.php?filter=login">Login</a>
+                <a class="link" href="behaviour.html">Behaviour</a>
             <?php endif; ?>
         </div>
 
@@ -59,14 +63,14 @@ if (!isset($_SESSION['id'])) {
 
         <?php if ($_SESSION['type'] === 'client'): ?>
         <form method="post" action="client.php?filter=showProduct">
-            <input type="hidden" name="id" value="<?php echo $_SESSION['id']; ?>">
+            <input type="hidden" name="usr" value="<?php echo $_SESSION['usr']; ?>">
+            <input type="hidden" name="type" value="<?php echo $_SESSION['type']; ?>">
             <button type="submit">Show Product</button>
         </form>
 
-        <a href="client.php?filter=viewCart">View Cart</a>
-
+        <a class="link" href="client.php?filter=viewCart">View Cart</a>
         <?php endif; ?>
-    </main>
+        </main>
 
 
 </body>

@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
         sendEmail($user_id, $request, $report);
     }
-    else if ($_POST['action'] === 'registerProduct'){
+    else if (isset($_POST['action']) && $_POST['action'] === 'registerProduct'){
         $name = $_POST['name'];
         $price = $_POST['price'];
         $iva = $_POST['iva'];
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     
         registerProduct($name, null, $price, $iva, $available); 
         echo "Producto añadido correctamente.";
-    } else if ($_POST['action'] === 'modifyProduct'){
+    } else if (isset($_POST['action']) && $_POST['action'] === 'modifyProduct'){
 
         $id = $_POST['id'];
         $name = $_POST['name'];
@@ -46,8 +46,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         modifyProduct($name, $id, $price, $iva, $available);
 
-} else if ($_POST['action'] === 'productPDF'){
+} else if (isset($_POST['action']) && $_POST['action'] === 'productPDF'){
     productToPDF();
+} else if ($_POST['assign'] === 'acceptCommand'){
+    $request = 'ramitant la comanda';
+    $report = 'La comanda está en preparacion, pls wait';
+    sendEmail($_SESSION['id'], $request, $report);   
+
+} else if ($_POST['assign'] === 'deleteCommand') {
+    $request = 'comanda rebutjad';
+    $report = 'La comanda ha sido denegada';
+    sendEmail($_SESSION['id'], $request, $report);
+    eraseCommand($_POST['idClient']);
+} else if ($_POST['assign'] === 'finalizeCommand') {
+    $request = 'comanda enviada';
+    $report = 'la comanda ha estat esborrada perquè els productes han estat enviats i ha estat pagada.';
+    sendEmail($_SESSION['id'], $request, $report);
+    eraseCommand($_POST['idClient']);
 }
 }
 ?>
@@ -145,6 +160,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <?php elseif (isset($_GET['filter']) && $_GET['filter'] === 'deleteProduct'):?>
 
     <?php deleteProduct($_POST['id']) ?>
+
+<?php elseif (isset($_GET['filter']) && $_GET['filter'] === "viewCommand"): ?>
+
+    <?php showCommand(); ?>
+
 <?php endif; ?>
 
 </body>

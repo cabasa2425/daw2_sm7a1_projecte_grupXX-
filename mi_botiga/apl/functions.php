@@ -13,14 +13,14 @@ function readLines($filename){
             return [];
         }
     } else {
-        echo "<script> body.innerHTML = 'File not found'</script>";
-        return;
+        echo "no encontrado el file";
+        die();
     }
 }
 
 function login($name, $password){
-
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+    $lines = readLines($filename);
     foreach ($lines as $line){
         $parts = explode(":", $line);
             if ($parts[0] === $name){
@@ -38,10 +38,15 @@ function login($name, $password){
     }
 }
 
+function logout(){
+    session_start();
+    session_destroy();
+    header('Location: index.php');
+}
 
 function registerManager($usr,$pwd,$type,$email,$id,$name,$surname) {
 
-    $filename = 'users.txt';
+    $filename = '../users.txt';
     if (file_exists($filename)){
 
         $lines = readLines($filename);
@@ -64,7 +69,7 @@ function registerManager($usr,$pwd,$type,$email,$id,$name,$surname) {
 
 function registerClient($usr,$pwd,$type,$email,$id,$name,$surname,$phone){
     
-    $filename = 'users.txt';
+    $filename = '../users.txt';
     if (file_exists($filename)){
 
         $lines = readLines($filename);
@@ -83,15 +88,12 @@ function registerClient($usr,$pwd,$type,$email,$id,$name,$surname,$phone){
         return;
     }
 }
-function logout(){
-    session_start();
-    session_destroy();
-    header('Location: index.php');
-}
+
 
 function showManagers(){
+            $filename = '../users.txt';
 
-            $lines = readLines('users.txt');
+            $lines = readLines($filename);
             foreach ($lines as $line){
 
                 $parts = explode(':', trim($line));
@@ -116,8 +118,9 @@ function showManagers(){
     }
     
     function showClients(){
-    
-        $lines = readLines('users.txt');
+        $filename = '../users.txt';
+
+        $lines = readLines($filename);
         foreach ($lines as $line){
 
             $parts = explode(':', trim($line));
@@ -143,8 +146,9 @@ function showManagers(){
 }
 
 function showClientsToManager(){
-    
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+
+    $lines = readLines($filename);
     foreach ($lines as $line){
 
         $parts = explode(':', trim($line));
@@ -172,7 +176,9 @@ function modifyManager(){
     $surname = $_POST['surname'];
 
     $id = $_POST['id'];
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+
+    $lines = readLines($filename);
     $newLines = [];
     foreach ($lines as $line){
         $parts = explode(':', trim($line));
@@ -182,7 +188,7 @@ function modifyManager(){
             $newLines[] = "$usr:$parts[1]:$parts[2]:$email:$parts[4]:$name:$surname";
         }
     }
-    $file = fopen('users.txt', 'w');
+    $file = fopen($filename, 'w');
     fwrite($file, implode(PHP_EOL, $newLines));
     array_pop($lines);
 }
@@ -196,7 +202,9 @@ function modifyClient(){
 
 
     $id = $_POST['id'];
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+
+    $lines = readLines($filename);
     $newLines = [];
     foreach ($lines as $line){
         $parts = explode(':', trim($line));
@@ -206,14 +214,16 @@ function modifyClient(){
             $newLines[] = "$usr:$parts[1]:$parts[2]:$email:$parts[4]:$name:$surname:$phone";
         }
     }
-    $file = fopen('users.txt', 'w');
+    $file = fopen($filename, 'w');
     fwrite($file, implode(PHP_EOL, $newLines));
     array_pop($lines);
 }
 
 function deleteManager(){
     $id = $_POST['id'];
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+
+    $lines = readLines($filename);
     $newLines = [];
     foreach ($lines as $line){
         $parts = explode(':', trim($line));
@@ -221,37 +231,19 @@ function deleteManager(){
             $newLines[] = $line;
         }
     }
-    $file = fopen('users.txt', 'w');
+    $file = fopen($filename, 'w');
     fwrite($file, implode(PHP_EOL, $newLines));
     array_pop($lines);
 }
-
-function checkUser() {
-    if (!$_SESSION['usr']) {
-        header('Location: index.php');
-        exit();
-    }
-    return true;
-}
-
-function checkAdmin() {
-    if (!isset($_SESSION['usr']) || $_SESSION['type'] !== 'admin') {
-        return false;
-    } else if (!isset($_SESSION['usr'])) {
-        header('Location: index.php');
-        exit();
-    }
-    return true;
-}
-
 function updateAdminInformation() {
     $usr = $_POST['usr'];
     $pwd = $_POST['pwd'];
     $email = $_POST['email'];
 
     $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
+    $filename = '../users.txt';
 
-    $lines = readLines('users.txt');
+    $lines = readLines($filename);
     foreach ($lines as $i => $line) {
         $parts = explode(':', trim($line));
         if ($parts[2] === 'admin') {
@@ -259,7 +251,7 @@ function updateAdminInformation() {
             break;
         }
     }
-    $file = fopen('users.txt', 'w');
+    $file = fopen($filename, 'w');
     fwrite($file, implode(PHP_EOL, $lines));
     header('Location: index.php');
     exit();
@@ -268,7 +260,9 @@ function updateAdminInformation() {
 function ManagerToPDF() {
     require_once('../vendor/autoload.php');
     $dompdf = new Dompdf\Dompdf();
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+
+    $lines = readLines($filename);
     $html = "<h1>Listado de managers</h1> <table border='1' style='width:100%; border-collapse: collapse;'>
     <tr><th>Nombre</th><th>Usuario</th><th>Apellido</th><th>Email</th><th>ID</th></tr>";
     foreach ($lines as $line) {
@@ -288,7 +282,9 @@ function ManagerToPDF() {
 function ClientToPDF() {
     require_once('../vendor/autoload.php');
     $dompdf = new Dompdf\Dompdf();
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+
+    $lines = readLines($filename);
     $html = "<h1>Client list</h1>   <table border='1' style='width:100%; border-collapse: collapse;'>
     <tr><th>Name</th><th>User</th><th>Surname</th><th>Email</th><th>ID</th><th>Phone</th></tr>";
     foreach ($lines as $line) {
@@ -306,7 +302,9 @@ function ClientToPDF() {
 
 function deleteClient() {
     $id = $_POST['id'];
-    $lines = readLines('users.txt');
+    $filename = '../users.txt';
+
+    $lines = readLines($filename);
     $newLines = [];
     foreach ($lines as $line) {
         $parts = explode(':', trim($line));
@@ -314,7 +312,7 @@ function deleteClient() {
             $newLines[] = $line;
         }
     }
-    $file = fopen('users.txt', 'w');
+    $file = fopen($filename, 'w');
     fwrite($file, implode(PHP_EOL, $newLines));
 }
 
@@ -325,8 +323,9 @@ function updateManagerInformations() {
     $name = $_POST['name'];
     $surname = $_POST['surname'];
     $id = $_POST['id'];
+    $filename = '../users.txt';
 
-    $lines = readLines('users.txt');
+    $lines = readLines($filename);
     foreach ($lines as $i => $line) {
         $parts = explode(':', trim($line));
         if ($parts[4] !== $id) {
@@ -334,7 +333,7 @@ function updateManagerInformations() {
             break;
         }
     }
-    $file = fopen('users.txt', 'w');
+    $file = fopen($filename, 'w');
     fwrite($file, implode("\n", $lines));
     fclose($file);
 }
@@ -349,13 +348,6 @@ use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
 
 function sendEmail($user_id, $request, $report){
-
-
-
-
-    $user_id = $_POST['id'];
-    $request = $_POST['request'];
-    $report = $_POST['report'];
 
     if ($request === 'add'){
         $user_id = $user_id ?: 'Add new one';
@@ -514,6 +506,7 @@ function showProductsToClient(){
             if (!empty($line)) {
             $parts = explode(':', $line);
             echo "<p>ID: {$parts[1]}, Nombre: {$parts[0]}, Precio: {$parts[2]}, IVA: {$parts[3]}, Disponible: {$parts[4]}</p>";
+            if ($parts[4] === 'yes') {
             echo "<form action='client.php?filter=showProduct' method='POST'>
                     <input type='hidden' name='idClient' value='{$_SESSION['id']}'>
                     <input type='hidden' name='idProduct' value='$parts[1]'>
@@ -523,24 +516,38 @@ function showProductsToClient(){
                     <input type='hidden' name='name' value='$parts[0]'>
                     <button  name='assign' value='showProduct'> Add </button></form>";
             }
+            }
         }
     }
 }
 
-function addToCart($idClient,$idProduct, $name, $price, $iva, $quantity){
+function addToCart($idProduct, $name, $price, $iva, $quantity) {
 
-    $filename = '../cistelles/product.txt';
-    if (file_exists($filename)){
+    $filename = '../cistelles/' . $_SESSION['usr'] . '.txt';
+    $file = fopen($filename, file_exists($filename) ? 'a' : 'w');
+    $lines = readLines($filename);
+    $productExists = false;
 
+    foreach ($lines as $line) {
+        if (!empty($line)) {
+            $parts = explode(':', $line);
+            if ($parts[0] === $idProduct) {
+                $productExists = true;
+                break;
+            }
+        }
+    }
+
+    if (!$productExists) {
+        $data = "$idProduct:$name:$price:$iva:$quantity\n";
         $file = fopen($filename, 'a');
-        $data = "$idClient:$idProduct:$name:$price:$iva:$quantity\n";
-        fwrite($file, $data);
-        fclose($file);    
+        fwrite($file, $data); 
+        fclose($file);
     }
 }
 
-function viewCart($idClient) {
-    $filename = '../cistelles/product.txt';
+function viewCart($usr) {
+    $filename = '../cistelles/'. $usr .'.txt';
     if (file_exists($filename)){
 
         $lines = readlines($filename);
@@ -550,28 +557,215 @@ function viewCart($idClient) {
 
         echo date("Y-m-d H:i:s");
         foreach ($lines as $line){
+            if (!empty($line)) {
             $parts = explode(':', $line);
-            if ($parts[0] === $idClient){
+                $totalWithIVA +=($parts[2] + ($parts[2]*$parts[3])/100)*$parts[4];
+                $totalWithoutIVA += $parts[2]*$parts[4];
+                $onlyIVA += (($parts[2]*$parts[3])/100)*$parts[4];
 
-                $totalWithIVA +=($parts[3] + ($parts[3]*$parts[4])/100)*$parts[5];
-                $totalWithoutIVA += $parts[3]*$parts[5];
-                $onlyIVA += (($parts[3]*$parts[4])/100)*$parts[5];
+                echo "<form action='client.php?filter=viewCart' method='POST'>
+                <input type='hidden' name='idProduct' value='$parts[0]'>
+                <input type='number' name='changeQuantity' placeholder='changeQuantity'>
+                <button  name='assign' value='changeQuantity'> change </button>
+                <button  name='assign' value='deleteProduct'> delete </button></form>";
 
-
-                echo "<p> Product : " . $parts[2] . "</p>";
-                echo "<p> Price: " . $parts[3] . "</p>";
-                echo "<p> Iva : " . $parts[4] . "</p>";
-                echo "<p> Quantity : " . $parts[5] . "</p>";  
-                echo "<p> without iva : " . $parts[3]*$parts[5] . "</p>";
-                echo "<p> only iva " . (($parts[3]*$parts[4])/100)*$parts[5];
-                echo "<p> Preu with iva : " . ($parts[3] + ($parts[3]*$parts[4])/100)*$parts[5] . "</p>" . "\n";
+                echo "<p> Product : " . $parts[1] . "</p>";
+                echo "<p> Price: " . $parts[2] . "</p>";
+                echo "<p> Iva : " . $parts[3] . "</p>";
+                echo "<p> Quantity : " . $parts[4] . "</p>";  
+                echo "<p> without iva : " . $parts[2]*$parts[3] . "</p>";
+                echo "<p> only iva " . (($parts[2]*$parts[3])/100)*$parts[4];
+                echo "<p> Preu with iva : " . ($parts[2] + ($parts[2]*$parts[3])/100)*$parts[4] . "</p>" . "\n";                
             }
         }
-    }
+        }
+    echo "<p>-------------------</p>";
     echo "<p> Total without iva: " . ($totalWithoutIVA) . "</p>";
     echo "<p> Total in iva: " . ($onlyIVA) . "</p>";
 
     echo "<p> Total with iva: " . ($totalWithIVA) . "</p>";
+}
+
+function deleteProductFromCart($usr, $idProduct) {
+    $filename = '../cistelles/' . $usr . '.txt';
+    if (file_exists($filename)){
+
+        $lines = readLines($filename);
+        $newLines = [];
+        foreach ($lines as $line){
+            $parts = explode(':', $line);
+            if ($parts[0]!== $idProduct) {
+                $newLines[] = $line;
+            }
+        }
+        $file = fopen($filename, 'w');
+        fwrite($file, implode("\n", $newLines));
+        header('location: client.php?filter=viewCart');
+    } else {
+        echo "File not found";
+        return;
+    }
+}
+
+function eraseCart($usr) {
+    $filename = '../cistelles/'. $usr . '.txt';
+    if (file_exists($filename)){
+        $newLines = [];
+        $file = fopen($filename, 'w');
+        fwrite($file, implode("\n", $newLines));
+        header('location: client.php?filter=viewCart');
+    } else {
+        echo "File not found";
+        return;
+    }
+}
+
+function createCommand($usr) {
+    $filename = '../comandes/'. $usr . '.txt';
+
+    $lines = readLines('../cistelles/'. $usr. '.txt');
+        $newLines = [];
+        foreach ($lines as $line){
+            $newLines[] = $line;
+        }
+
+        $file = fopen($filename, 'w');
+        fwrite($file, implode("\n", $newLines));
+        header('location: client.php?filter=viewCart');
+}
+
+function modifyCommand($usr) {
+    $filename = '../cistelles/'. $usr . '.txt';
+
+    $lines = readLines('../comandes/'. $usr. '.txt');
+        $newLines = [];
+        foreach ($lines as $line){
+            $newLines[] = $line;
+        }
+
+        $file = fopen($filename, 'w');
+        fwrite($file, implode("\n", $newLines));
+        header('location: client.php?filter=viewCart');
+}
+
+function eraseCommand($usr) {
+    $filename = '../comandes/' . $usr . '.txt';
+    if (file_exists($filename)) {
+        if (unlink($filename)) {
+            header('location: client.php?filter=viewCart');
+        } else {
+            echo "Error: No se pudo eliminar el archivo.";
+            return;
+        }
+    } else {
+        echo "Error: Archivo no encontrado.";
+        return;
+    }
+}
+
+
+function commandToPDF($usr) {
+    $filename = '../comandes/'. $usr . '.txt';
+    require_once('../vendor/autoload.php');
+    $dompdf = new Dompdf\Dompdf();
+    $lines = readLines($filename);
+    $html = "<h1>Comanda de ". $_SESSION['usr']. "</h1>   <table border='1' style='width:100%; border-collapse: collapse;'>
+        <tr><th>ID</th><th>NOMBRE</th><th>PREU</th><th>IVA</th><th>QUANTITAT</th></tr>";
+        foreach ($lines as $line) {
+            $parts = explode(':', trim($line));
+            $html.= "<tr><td>$parts[0]</td><td>$parts[1]</td><td>$parts[2]</td><td>$parts[3]</td><td>$parts[4]</td></tr>";
+        }
+        $html .= "</table>";
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        $dompdf->stream("Command.pdf",);
+
+}
+
+function changeQuantity($usr, $idProduct, $newQuantity) {
+    $filename = "../cistelles/" . $usr . ".txt";
+
+    if (file_exists($filename)) {
+
+        $lines = readLines($filename);
+        foreach ($lines as $i => $line) {
+            $parts = explode(':', trim($line));
+            if ($parts[0] === $idProduct) {
+                $lines[$i] = "$idProduct:$parts[1]:$parts[2]:$parts[3]:$newQuantity";
+                break;
+            }
+        }
+        
+        $file = fopen($filename, 'w');
+        fwrite($file, implode(PHP_EOL, $lines));
+        fclose($file);
+    }
+}
+
+// SECTION 5 -------------------------------------------------
+
+
+function showCommand() {
+    $directory = '../comandes/';
+
+    $files = scandir($directory);
+
+    foreach ($files as $file) {
+        if ($file !== '.' && $file !== '..') {
+            $filePath = $directory . $file;
+
+            if (is_file($filePath)) {
+                $fileNameWithoutExtension = pathinfo($file, PATHINFO_FILENAME);
+
+                echo "<h3>Procesando fichero: $fileNameWithoutExtension</h3>";
+
+                viewCommand($fileNameWithoutExtension);
+
+                echo "<hr>";
+            }
+        }
+    }
+}
+
+function viewCommand($usr) {
+    $filename = '../comandes/'. $usr .'.txt';
+    if (file_exists($filename)){
+
+        $lines = readlines($filename);
+        $totalWithIVA = 0;
+        $totalWithoutIVA = 0;
+        $onlyIVA = 0;
+
+        echo date("Y-m-d H:i:s");
+        foreach ($lines as $line){
+            if (!empty($line)) {
+            $parts = explode(':', $line);
+                $totalWithIVA +=($parts[2] + ($parts[2]*$parts[3])/100)*$parts[4];
+                $totalWithoutIVA += $parts[2]*$parts[4];
+                $onlyIVA += (($parts[2]*$parts[3])/100)*$parts[4];
+
+                echo "<p> Product : " . $parts[1] . "</p>";
+                echo "<p> Price: " . $parts[2] . "</p>";
+                echo "<p> Iva : " . $parts[3] . "</p>";
+                echo "<p> Quantity : " . $parts[4] . "</p>";  
+                echo "<p> without iva : " . $parts[2]*$parts[3] . "</p>";
+                echo "<p> only iva " . (($parts[2]*$parts[3])/100)*$parts[4];
+                echo "<p> Preu with iva : " . ($parts[2] + ($parts[2]*$parts[3])/100)*$parts[4] . "</p>" . "\n";                
+            }
+        }
+        }
+    
+    echo "<p> Total without iva: " . ($totalWithoutIVA) . "</p>";
+    echo "<p> Total in iva: " . ($onlyIVA) . "</p>";
+
+    echo "<p> Total with iva: " . ($totalWithIVA) . "</p>";
+
+    echo "<form action='manager.php?filter=viewCommand' method='POST'>
+                <input type='hidden' name='idClient' value='$usr'>
+                <button  name='assign' value='acceptCommand'> Accept </button>
+                <button  name='assign' value='finalizeCommand'> finalize </button>
+                <button  name='assign' value='deleteCommand'> delete </button></form>";
 }
 
 ?>
