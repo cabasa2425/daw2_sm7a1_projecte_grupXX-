@@ -1,0 +1,5 @@
+carlos:$2y$10$OoNQLRxpkvbhHd9LkRyOeOKm4QF5Qs4eHv2iNnAX3pB6UqrpBpbqq:admin:tenedote999@gmail.com
+p:$2y$10$nLuMOysT7s8WEc4jj0oFbeSgfhgE4ouDx2rgY13Hubqa.J95gXam2:manager:guillem.galvan@gmail.com:6:p:p
+m:$2y$10$GcQup0D8qI5kkog9WEzze.OI6TZleJEAx2wgRuX5JJIUQhJQNdtiO:client:m:6:m:m:m
+n:$2y$10$JwUEAj0DH3dbWY8r4Q4/T.p4hBTPtw7S7rP2.wNvbhy0..O7AsJ1u:client:n:4:n:n:2
+ramiro:$2y$10$jnZPrBRbP1KAPPlpPamOi.MSx245jMjD3bD3TcRsNCUEwc.U.1Kkm:client:hola@gmail.com:5:rami:miro:666666

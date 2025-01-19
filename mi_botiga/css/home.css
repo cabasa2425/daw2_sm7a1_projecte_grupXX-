@@ -1,0 +1,54 @@
+body {
+    background: linear-gradient(to bottom, #ddd, #6c5b7a);
+    font-family: Arial, sans-serif; 
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+
+header {
+    background-color: rgb(230, 230, 230);
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    padding: 0 2vw;
+    align-items: center;
+}
+
+img {
+    width: 9rem;
+}
+
+
+.link {
+    text-decoration: none;
+    padding: 1.3vw;
+    background-color: rgb(44, 120, 11);
+    color: white;
+    border-radius: 5px;
+    margin-right: 1vw;
+}
+
+.header-right {
+    margin-right: 3vw;
+}
+
+button:hover {
+    background-color: rgb(34, 98, 9);
+}
+
+button:active {
+    background-color: rgb(24, 78, 9);
+}
+
+.home{
+    padding: 0vw;
+    border-radius: 0px;
+    margin-right: 0vw;
+}
