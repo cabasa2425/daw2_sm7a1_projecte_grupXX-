@@ -352,6 +352,18 @@ function sendEmail($user_id, $request, $report){
     if ($request === 'add'){
         $user_id = $user_id ?: 'Add new one';
     }
+
+    $filename = '../users.txt';
+    $lines = readLines($filename);
+    foreach($lines as $line){
+        $parts = explode(':', trim($line));
+        if($parts[2] === 'admin'){
+            $user_name = $parts[0];
+            $user_email = $parts[3];
+            break;
+        }
+    }
+
     // Configuración del correo
     $mail = new PHPMailer(true);
 
@@ -365,12 +377,67 @@ function sendEmail($user_id, $request, $report){
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 
         // Credenciales del correo
-        $mail->Username = 'tenedote999@gmail.com';  // Cambia por tu correo de Gmail
+        $mail->Username = $user_email;  // Cambia por tu correo de Gmail
         $mail->Password = 'erjx bpdw njvr nodq';    // Cambia por tu contraseña de aplicación
 
         // Configuración del destinatario y mensaje
-        $mail->setFrom('tenedote999@gmail.com', 'Carlos');
-        $mail->addAddress('tenedote999@gmail.com', 'Carlos');  // Cambia por el correo del destinatario
+        $mail->setFrom($user_email, $user_name);
+        $mail->addAddress($user_email, $user_name);  // Cambia por el correo del destinatario
+
+        $mail->Subject = "Reporte de Cliente - Solicitud: " . ucfirst($request);  // Asunto del correo
+        $mail->isHTML(true);
+        $mail->Body = "<h1>Nuevo Reporte</h1>
+                       <p><strong>ID del Usuario:</strong> {$user_id}</p>
+                       <p><strong>Solicitud:</strong> {$request}</p>
+                       <p><strong>Reporte:</strong><br>{$report}</p>";
+
+        // Enviar correo
+        if ($mail->send()) {
+            echo 'El correo se ha enviado correctamente.';
+            header('location: index.php');
+        } else {
+            echo 'No se pudo enviar el correo. Inténtalo nuevamente.';
+        }
+    } catch (Exception $e) {
+        echo "Error al enviar el mensaje: {$mail->ErrorInfo}";
+    }
+}
+
+function sendEmailToManager($user_id, $request, $report){
+
+    if ($request === 'add'){
+        $user_id = $user_id ?: 'Add new one';
+    }
+
+    $filename = '../users.txt';
+    $lines = readLines($filename);
+    foreach($lines as $line){
+        $parts = explode(':', trim($line));
+        if($parts[2] === 'manager'){
+            $user_name = $parts[0];
+            $user_email = $parts[3];
+            break;
+        }
+    }
+    // Configuración del correo
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->CharSet = 'UTF-8';
+        $mail->SMTPDebug = SMTP::DEBUG_OFF; // Cambiar a DEBUG_OFF para producción
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = 587;
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+
+        // Credenciales del correo
+        $mail->Username = $user_email;  // Cambia por tu correo de Gmail
+        $mail->Password = 'htgo gdtt rfid safm';    // Cambia por tu contraseña de aplicación
+
+        // Configuración del destinatario y mensaje
+        $mail->setFrom($user_email, $user_name);
+        $mail->addAddress($user_email, $user_name);  // Cambia por el correo del destinatario
 
         $mail->Subject = "Reporte de Cliente - Solicitud: " . ucfirst($request);  // Asunto del correo
         $mail->isHTML(true);
@@ -496,6 +563,22 @@ function productToPDF(){
 }
 
 // SECTION 4 -----------------------------------------------------
+
+function showDataClient(){
+    $filename = '../users.txt';
+
+    if (file_exists($filename)){
+        echo "<h1>Mis Datos</h1>";
+        $lines = readLines($filename);
+        foreach ($lines as $line){
+            $parts = explode(':', trim($line));
+            if ($parts[2] === 'client' && $parts[4] === $_SESSION['id']){
+                echo "<p>Nombre: {$parts[0]}, Correo: {$parts[3]}, Phone: {$parts[7]}</p>";
+            }
+        }
+    }
+}
+
 function showProductsToClient(){
     $filename = '../products.txt';
 

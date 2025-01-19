@@ -68,7 +68,21 @@ if (!isset($_SESSION['id'])) {
             <button type="submit">Show Product</button>
         </form>
 
-        <a class="link" href="client.php?filter=viewCart">View Cart</a>
+        <form method="post" action="client.php">
+            <input type="hidden" name="id" value="<?php echo $_SESSION['id'];?>">
+            <input type="textarea" name="body">
+            <button name="solicitude" value="modifyDelete" type="submit">Solicitude to modify or erase my account</button>
+        </form>
+
+        <form method="post" action="client.php">
+            <input type="hidden" name="id" value="<?php echo $_SESSION['id'];?>">
+            <input type="textarea" name="body">
+            <button name="report" value="deleteCommand" type="submit">Report to the manager</button>
+        </form>
+
+        <a href="client.php?filter=viewCart">View Cart</a>
+        <a href="client.php?filter=profile">Profile</a>
+
         <?php endif; ?>
         </main>
 

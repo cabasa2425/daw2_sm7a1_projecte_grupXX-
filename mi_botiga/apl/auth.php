@@ -130,7 +130,6 @@ if ($pdf === "client") {
         <?php if ($mensaje): echo "<h1>$error</h1>"?>  <?php endif; ?>
 
         <?php else: ?>
-    <?php if (checkAdmin()): ?>
 
     <?php if ($filter === 'registerManager'): ?>
         <h2>Register as Manager</h2>
@@ -200,7 +199,6 @@ if ($pdf === "client") {
 
 
 <?php endif;?>
-<?php endif;?> 
 
 <?php if ($filter === "modifyClient"): ?> 
     <h2>Modify Client Information</h2>

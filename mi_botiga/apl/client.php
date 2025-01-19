@@ -46,6 +46,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['assign'] === 'deleteProduct
     changeQuantity($_SESSION['usr'] ,$productId, $_POST['changeQuantity']);
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['solicitude'] === 'modifyDelete'){
+    $subject = "Solicitude de modificación o eliminación de cuenta";
+    $body = $_POST['body'];
+    sendEmailToManager($_SESSION['id'], $subjetc, $body);
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['report'] === 'deleteCommand'){
+    $subject = "etició de justificació de comanda rebutjada";
+    $body = $_POST['body'];
+    sendEmailToManager($_SESSION['id'], $subjetc, $body);
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -62,15 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['assign'] === 'deleteProduct
             <img src="../V-removebg-preview.png">
             </a>
             <h1>Wilos Balvan</h1>
-            
         </div>
-
 
     </header>
 <body>
     <?php if ($_GET['filter'] === 'showProduct'): ?>
     <?php showProductsToClient(); ?>
-    <a class="link" href="client.php?filter=viewCart">View Cart</a>
+    <a href="client.php?filter=viewCart">View Cart</a>
     <?php endif;?>
 
     <?php if ($_GET['filter'] === 'viewCart'): ?>
@@ -85,5 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['assign'] === 'deleteProduct
         </form><br><br>
         <a class="link" href="client.php?filter=showProduct">Back to product list</a>
     <?php endif; ?>
+
+    <?php if ($_GET['filter'] === 'profile'):?>
+        <?php showDataClient(); ?>
+    <?php endif;?>
 </body>
 </html>
